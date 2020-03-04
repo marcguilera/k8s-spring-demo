@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
 @Component
-open class DemoPrinter {
+class DemoPrinter {
     @Autowired
     private lateinit var props: DemoProperties
     private val logger = LoggerFactory.getLogger(DemoPrinter::class.java)

@@ -28,17 +28,10 @@ spec:
       labels:
         app: demo-backend
     spec:
-#      volumes:
-#        - name: demo-config-volume
-#          configMap:
-#            name: demo-config
       containers:
         - name: demo-backend
-          image: demo-backend:latest
+          image: demo-backend
           imagePullPolicy: Never
-#          volumeMounts:
-#            - mountPath: /etc/service-config
-#              name: demo-config-volume
           ports:
             - containerPort: 8080
 ---
@@ -60,5 +53,5 @@ kind: ConfigMap
 metadata:
   name: demo-config
 data:
-  demo.yaml: |-
-    demo.name: marc
+  application.yaml: |-
+    demo.name: NAME
