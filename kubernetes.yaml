@@ -1,0 +1,64 @@
+# needed to allow spring to query the api. should be closed down to configmaps.
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: demo-rbac
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-backend
+spec:
+  selector:
+    matchLabels:
+      app: demo-backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: demo-backend
+    spec:
+#      volumes:
+#        - name: demo-config-volume
+#          configMap:
+#            name: demo-config
+      containers:
+        - name: demo-backend
+          image: demo-backend:latest
+          imagePullPolicy: Never
+#          volumeMounts:
+#            - mountPath: /etc/service-config
+#              name: demo-config-volume
+          ports:
+            - containerPort: 8080
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: demo-backend
+spec:
+  selector:
+    app: demo-backend
+  ports:
+    - protocol: TCP
+      port: 8080
+  type: NodePort
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: demo-config
+data:
+  demo.yaml: |-
+    demo.name: marc
